@@ -18453,7 +18453,7 @@ window.renderHome=function(){_rh();try{var h=appEl.querySelector('.hero');if(!h)
 }catch(e){}};
 var _sa=window.shareApp;
 window.shareApp=async function(){var text="Hey! I'm using Alio — free, ad-free tools, games and health helpers all in one place. Try it: "+SITE;
- try{var r=await fetch('invite.jpg');if(r.ok){var f=new File([await r.blob()],'kstech.jpg',{type:'image/jpeg'});
+ try{var r=await fetch('Invite.jpg');if(r.ok){var f=new File([await r.blob()],'kstech.jpg',{type:'image/jpeg'});
   if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],text:text,title:'Alio'});return;}}}catch(e){if(e&&e.name==='AbortError')return;}
  _sa();};
 })();

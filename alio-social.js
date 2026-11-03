@@ -223,8 +223,8 @@ function gcCompressIcon(file,cb){
 }
 
 /* ───────────── Group info sheet ───────────── */
-var gcNameEditing=false;
-function gcInfoClose(){ var o=document.getElementById('gcInfoOv'); if(o) o.remove(); gcNameEditing=false; }
+var gcNameEditing=false, gcDescEditing=false;
+function gcInfoClose(){ var o=document.getElementById('gcInfoOv'); if(o) o.remove(); gcNameEditing=false; gcDescEditing=false; }
 function gcInfoOpen(){
   if(!gcCur()) return;
   gcInfoClose();
@@ -238,8 +238,9 @@ function gcInfoRender(){
   var g=gcCur(); if(!g){ gcInfoClose(); return; }
   var me=dmMe(), host=gcIsHost(g,me), owner=gcIsOwner(g,me), canEdit=gcCanEditInfo(g);
   var keepName=document.getElementById('gcInfoName'); var nameVal=keepName?keepName.value:g.name;
+  var keepDesc=document.getElementById('gcInfoDesc'); var descVal=keepDesc?keepDesc.value:(g.description||''); var curDesc=String(g.description||'');
   var members=(g.members||[]).slice().sort(function(a,b){
-    var ra=gcIsOwner(g,a)?0:gcIsHost(g,a)?1:2, rb=gcIsOwner(g,b)?0:gcIsHost(g,b)?1:2;
+    var ra=a===me?-1:gcIsOwner(g,a)?0:gcIsHost(g,a)?1:2, rb=b===me?-1:gcIsOwner(g,b)?0:gcIsHost(g,b)?1:2;
     if(ra!==rb) return ra-rb; return dmPerson(a).name.localeCompare(dmPerson(b).name);
   });
   var h='<div class="ks-dm-box ks-gc-box" onclick="event.stopPropagation()">'
@@ -252,6 +253,15 @@ function gcInfoRender(){
         :'<div style="font-family:Syne,sans-serif;font-weight:700;font-size:19px">'+escapeHTML(g.name||'Group')+(canEdit?' <button class="ks-kebab" aria-label="Edit name" style="font-size:15px;padding:2px 8px" onclick="gcNameEditing=true;gcInfoRender()">✏️</button>':'')+'</div>')
       +'<div style="font-size:12.5px;color:var(--sub)">'+members.length+' / 50 members</div>'
     +'</div>';
+  if(gcDescEditing&&canEdit){
+    h+='<div class="gc-label">Group description</div><textarea class="ks-input" id="gcInfoDesc" rows="4" maxlength="500" oninput="var c=document.getElementById(\'gcInfoDescN\');if(c)c.textContent=this.value.length+\' / 500\'" style="width:100%;resize:vertical" placeholder="What is this group about?">'+escapeHTML(descVal)+'</textarea>'
+      +'<div style="display:flex;align-items:center;gap:8px;margin:6px 0 10px"><span id="gcInfoDescN" style="font-size:12px;color:var(--sub);flex:1">'+descVal.length+' / 500</span><button class="btn btn-ghost" onclick="gcDescEditing=false;gcInfoRender()">Cancel</button><button class="btn btn-primary" onclick="gcInfoSaveDesc()">Save</button></div>';
+  }else if(curDesc){
+    h+='<div class="gc-label">Group description'+(canEdit?' <button class="ks-kebab" aria-label="Edit description" style="font-size:15px;padding:2px 8px" onclick="gcDescEditing=true;gcInfoRender()">✏️</button>':'')+'</div>'
+      +'<div style="font-size:14px;line-height:1.5;white-space:pre-wrap;word-break:break-word;margin-bottom:10px">'+escapeHTML(curDesc)+'</div>';
+  }else if(canEdit){
+    h+='<button class="btn btn-ghost" style="width:100%;margin:8px 0" onclick="gcDescEditing=true;gcInfoRender()">📝 Add group description</button>';
+  }
   if(host){
     h+='<div class="settings-row"><div class="settings-row-text"><strong>Members can edit name &amp; picture</strong><span>Turn off so only Hosts can change them.</span></div>'
       +'<button class="ks-switch'+(g.membersCanEdit===true?' on':'')+'" id="gcSwCanEdit" role="switch" aria-checked="'+(g.membersCanEdit===true?'true':'false')+'" aria-label="Members can edit name and picture" onclick="gcToggleCanEdit()"></button></div>';
@@ -286,6 +296,12 @@ function gcInfoSaveName(){
   var n=el.value.trim().slice(0,40); if(!n){ ksAlert('The group needs a name.'); return; }
   if(n===g.name){ gcNameEditing=false; gcInfoRender(); return; }
   gcK().gcRename(g.id,{name:n}).then(function(){ gcNameEditing=false; gcInfoRender(); }).catch(function(){ ksAlert('Could not change the name. Only Hosts can when member editing is off.'); });
+}
+function gcInfoSaveDesc(){
+  var g=gcCur(), el=document.getElementById('gcInfoDesc'); if(!g||!el) return;
+  var t=el.value.trim().slice(0,500);
+  if(t===String(g.description||'')){ gcDescEditing=false; gcInfoRender(); return; }
+  gcK().gcRename(g.id,{description:t}).then(function(){ gcDescEditing=false; gcInfoRender(); }).catch(function(){ ksAlert('Could not change the description. Only Hosts can when member editing is off.'); });
 }
 function gcToggleCanEdit(){
   var g=gcCur(); if(!g||!gcIsHost(g,dmMe())) return;

@@ -1,7 +1,7 @@
 /* alio-about.js — About, Privacy Policy, Terms of Use and Community Guidelines pages.
    Loaded automatically by index.html the first time someone opens one of these pages (with the Alio loading screen).
    Keep this file in the same folder as index.html. */
-const LEGAL_UPDATED='5 November 2026';
+const LEGAL_UPDATED='19 November 2026';
 const LEGAL_PAGES=[
   {id:'about',label:'About',icon:'ℹ️'},
   {id:'privacy',label:'Privacy Policy',icon:'🔒'},
@@ -225,7 +225,7 @@ function renderPrivacy(){
     +"<li>A unique account ID (UID) created by Firebase.</li>"
     +"</ul>"
     +"<h4>Settings</h4>"
-    +"<ul><li>Your display preferences (such as theme, colours, text size, layout and assistant-button position) and the last section you visited, so they follow you across devices.</li></ul>"
+    +"<ul><li>Your display preferences (such as theme, colours, text size, layout, the Quick launch shortcuts you pin and assistant-button position) and the last section you visited, so they follow you across devices.</li></ul>"
     +"<h4>Sign-out of other devices</h4>"
     +"<ul><li>If you use <em>Log out of all other devices</em>, the time you did so is saved on your account so your other devices know to sign out.</li></ul>"
     +"<h4>Public profile</h4>"
@@ -283,9 +283,9 @@ function renderPrivacy(){
   S.push({id:'device',title:'Information stored on your device',body:
     "<p>Alio saves some things in your browser's local storage so the app feels consistent. This stays on your device unless stated otherwise:</p>"
     +"<ul>"
-    +"<li>Display preferences (theme, colours, text size, layout, simple mode and similar options).</li>"
+    +"<li>Display preferences (theme, colours, text size, layout, simple mode, Reduce motion and similar options).</li>"
     +"<li>A random visitor ID used for visit counting (see section 2). On its own it is not linked to you, but if you are signed in the Owner can connect it to your account. You can switch it off.</li>"
-    +"<li>Your favourite and recently used tools, and recent searches.</li>"
+    +"<li>Your favourite and recently used tools, the Quick launch shortcuts you pin, and recent searches.</li>"
     +"<li>Handwriting Maker drawings and typing history.</li>"
     +"<li>Notes, To-do and Catalog: your notes, note folders, recycled notes, tasks, Catalog texts and view settings are saved in this browser's local storage. If you are <strong>not signed in</strong>, they stay only on this device: they are not uploaded and are not available elsewhere, and clearing site data deletes them. If you <strong>are signed in</strong>, they are also synced to your account (see section 3). The Backup button exports a file you keep yourself.</li>"
     +"<li>Your push alert choices for this device (whether alerts are on and which types you picked), and a short note of the last alert this device received, which the test button in Settings uses.</li>"
